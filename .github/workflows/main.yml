@@ -1,20 +1,16 @@
 name: Web Build + Deployment to GitHub Pages
 
 on:
-  # Trigger on pushes to the main or master branches
   push:
     branches: 
       - master
       - main
-  # Trigger on pull requests targeting main or master
   pull_request:
     branches: 
       - master
       - main
-  # Allow manual execution
   workflow_dispatch:
 
-# Ensure concurrency to avoid overlapping runs
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -33,7 +29,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Python ${{ env.PYTHON_VERSION }}
+    - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: ${{ env.PYTHON_VERSION }}
@@ -43,7 +39,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
   
-    - name: Setup Flutter ${{ env.FLUTTER_VERSION }}
+    - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
         flutter-version: ${{ env.FLUTTER_VERSION }}
@@ -61,13 +57,13 @@ jobs:
         path: build/web
 
   deploy:
-    needs: build  # Wait for the "build" job to finish
+    needs: build
 
     runs-on: ubuntu-latest
 
     permissions:
-      pages: write      # Required to deploy to Pages
-      id-token: write   # To verify the deployment source
+      pages: write
+      id-token: write
 
     environment:
       name: github-pages
@@ -78,7 +74,7 @@ jobs:
         uses: actions/configure-pages@v5
         
       - name: Deploy to GitHub Pages 🚀
-        if: github.event_name == 'push'  # Deploy only on push events
+        if: github.event_name == 'push'
         id: deployment
         uses: actions/deploy-pages@v4.0.5
         with:
