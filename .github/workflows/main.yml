@@ -1,20 +1,20 @@
 name: Web Build + Deployment to GitHub Pages
 
 on:
-  # Runs on push to any of the below branches
+  # Trigger on pushes to the main or master branches
   push:
     branches: 
       - master
       - main
-  # Runs on pull request events targeting one of the below branches
+  # Trigger on pull requests targeting main or master
   pull_request:
     branches: 
       - master
       - main
-  # Allows you to run this workflow manually from the Actions tab
+  # Allow manual execution
   workflow_dispatch:
 
-# Limit concurrency to prevent overlapping deployments
+# Ensure concurrency to avoid overlapping runs
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -61,7 +61,7 @@ jobs:
         path: build/web
 
   deploy:
-    needs: build  # Waits for the "build" job to finish
+    needs: build  # Wait for the "build" job to finish
 
     runs-on: ubuntu-latest
 
